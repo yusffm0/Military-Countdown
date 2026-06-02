@@ -276,11 +276,12 @@ text-align:center;
 
 /* ── STATS GRID ── */
 .stats-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;
+  display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;
   padding:1.5rem 0;border-bottom:1px solid var(--border);
   transition:border-color .35s;
 }
-@media(max-width:600px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){.stats-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:500px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
 .stat-card{
   background:var(--surface);border:1px solid var(--border);border-radius:10px;
   padding:1.1rem 1rem;box-shadow:var(--shadow);
@@ -450,6 +451,7 @@ text-align:center;
         <div class="stat-card"><div class="lbl">Total Minutes</div><div class="val" id="sMins">—</div><div class="sub">remaining</div></div>
         <div class="stat-card"><div class="lbl">Total Seconds</div><div class="val" id="sSecs">—</div><div class="sub">remaining</div></div>
         <div class="stat-card"><div class="lbl">Weeks Left</div><div class="val" id="sWeeks">—</div><div class="sub" id="sMonths">—</div></div>
+<div class="stat-card"><div class="lbl">Weeks Elapsed</div><div class="val" id="sWeeksElapsed">—</div><div class="sub" id="sWeeksElapsedSub">since start</div></div>
       </div>
 
       <!-- WORK COLS -->
@@ -643,6 +645,12 @@ function update(){
   document.getElementById('sSecs').textContent=fmt(remSec);
   document.getElementById('sWeeks').textContent=fmt(Math.floor(d/7));
   document.getElementById('sMonths').textContent=`~${(d/30.44).toFixed(1)} months`;
+  const elapsedSec=Math.max(0,Math.floor((now-startDate)/1000));
+  const elapsedDays=Math.floor(elapsedSec/86400);
+  const weeksElapsed=Math.floor(elapsedDays/7);
+  const daysRemainder=elapsedDays%7;
+  document.getElementById('sWeeksElapsed').textContent=fmt(weeksElapsed);
+  document.getElementById('sWeeksElapsedSub').textContent=daysRemainder>0 ? `${daysRemainder}d into week ${weeksElapsed+1}` : 'since start';
 
   const today=new Date(now);today.setHours(0,0,0,0);
   const endD=new Date(endDate);endD.setHours(0,0,0,0);
