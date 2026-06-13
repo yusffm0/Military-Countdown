@@ -127,10 +127,11 @@ body::after{
 }
 .title-main{
   font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(4rem,10vw,8rem);
+  font-size:clamp(2rem,8vw,4rem);
   line-height:.88;letter-spacing:.03em;
   color:var(--ink);
   transition:color .35s;
+text-align:center;
 }
 .title-sub{
   font-family:'Tajawal',sans-serif;
@@ -163,11 +164,10 @@ body::after{
 .input-wrap{
   padding:2rem 0;
   border-bottom:1px solid var(--border);
-  display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:1.25rem;align-items:end;
+  display:grid;grid-template-columns:1fr 1fr auto;gap:1.25rem;align-items:end;
   transition:border-color .35s;
 }
-@media(max-width:720px){.input-wrap{grid-template-columns:1fr 1fr;gap:1rem}}
-@media(max-width:480px){.input-wrap{grid-template-columns:1fr;gap:1rem}}
+@media(max-width:620px){.input-wrap{grid-template-columns:1fr;gap:1rem}}
 
 .field label{
   display:block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;
@@ -197,11 +197,6 @@ body::after{
 .calc-btn:hover{background:var(--accent);box-shadow:var(--shadow-lg);transform:translateY(-1px)}
 .calc-btn:active{transform:scale(.97)}
 
-.field input[type="number"]{-moz-appearance:textfield}
-.field input[type="number"]::-webkit-inner-spin-button,
-.field input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none}
-.vac-card{transition:background .35s, border-color .35s, box-shadow .35s, transform .2s !important}
-.vac-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
 .err{display:none;color:var(--accent);font-size:.75rem;letter-spacing:.05em;margin-top:.65rem;transition:color .35s}
 
 /* ── RESULTS ── */
@@ -384,8 +379,7 @@ body::after{
 <!-- TOP BAR -->
 <div class="topbar">
   <div class="topbar-meta">
-    Edition № 01 &nbsp;·&nbsp; Egypt EGY<br>
-    Workweek: Sunday – Thursday
+ 
   </div>
   <div class="topbar-right">
     <div class="topbar-date" id="todayLabel">—</div>
@@ -399,8 +393,7 @@ body::after{
 <!-- MASTHEAD -->
 <div class="masthead page">
   <div class="title-group">
-    <div class="title-eyebrow">🇪🇬 Egypt · Workday Calculator</div>
-    <div class="title-main">COUNT<br>DOWN</div>
+    <div class="title-main">Military Days COUNTDOWN</div>
     <div class="title-sub">حاسبة أيام العمل · مصر &nbsp;—&nbsp; Cairo UTC+2</div>
   </div>
   <div class="masthead-badge">
@@ -425,10 +418,6 @@ body::after{
     <div class="field">
       <label>End Date · تاريخ النهاية</label>
       <input type="text" id="endInp" placeholder="DD/MM/YYYY" />
-    </div>
-    <div class="field">
-      <label>Days Off / Week · أيام إجازة</label>
-      <input type="number" id="vacInp" placeholder="2" min="0" max="7" step="1" />
     </div>
     <button class="calc-btn" onclick="calculate()">→ Calculate</button>
   </div>
@@ -461,16 +450,6 @@ body::after{
         <div class="stat-card"><div class="lbl">Total Minutes</div><div class="val" id="sMins">—</div><div class="sub">remaining</div></div>
         <div class="stat-card"><div class="lbl">Total Seconds</div><div class="val" id="sSecs">—</div><div class="sub">remaining</div></div>
         <div class="stat-card"><div class="lbl">Weeks Left</div><div class="val" id="sWeeks">—</div><div class="sub" id="sMonths">—</div></div>
-        <div class="stat-card vac-card" id="vacCard" style="border-color:var(--gold)">
-          <div class="lbl" style="color:var(--gold)">Work Days / Week</div>
-          <div class="val" id="sVacRem" style="color:var(--gold)">—</div>
-          <div class="sub" id="sVacSub">—</div>
-        </div>
-        <div class="stat-card vac-card" id="netCard" style="display:none;border-color:var(--accent-2)">
-          <div class="lbl" style="color:var(--accent-2)">Net Work Days</div>
-          <div class="val" id="sNetWork" style="color:var(--accent-2)">—</div>
-          <div class="sub">after vacation</div>
-        </div>
       </div>
 
       <!-- WORK COLS -->
@@ -481,14 +460,6 @@ body::after{
           <div class="work-row"><div class="wl">Remaining</div><div class="wv" id="wRemaining">—</div></div>
           <div class="work-row"><div class="wl">Elapsed</div><div class="wv good" id="wElapsed">—</div></div>
           <div class="work-row"><div class="wl">Total</div><div class="wv" style="color:var(--muted)" id="wTotal">—</div></div>
-          <div class="work-row" id="vacRow" style="display:none;border-top:1px solid var(--border);padding-top:.75rem;margin-top:.25rem">
-            <div class="wl" style="color:var(--gold)">Vacation Days Remaining</div>
-            <div class="wv warn" id="wVacRem">—</div>
-          </div>
-          <div class="work-row" id="netRow" style="display:none">
-            <div class="wl" style="color:var(--accent-2)">Net Work Days (after vacation)</div>
-            <div class="wv" style="color:var(--accent-2)" id="wNetWork">—</div>
-          </div>
         </div>
         <div>
           <div class="col-head" style="font-size:clamp(1.2rem,2.5vw,2rem)">HOLIDAYS<br><em class="blue">EXCLUDED</em></div>
@@ -548,30 +519,6 @@ body::after{
           </div>
         </div>
 
-        <!-- Net work days progress (shown only when vacation > 0) -->
-        <div class="prog-block" id="netProgBlock" style="display:none">
-          <div class="prog-meta">
-            <span class="prog-label" style="color:var(--gold)">Vacation Used vs. Total Vacation</span>
-            <span class="prog-pct-val" id="vacPct" style="color:var(--gold)">0.0%</span>
-          </div>
-          <div class="prog-track-wrap">
-            <div class="prog-track">
-              <div class="prog-fill" id="vacFill" style="width:0%;background:linear-gradient(90deg,var(--gold),var(--accent))"></div>
-              <div class="prog-head" id="vacHead" style="left:0%;background:var(--gold)"></div>
-            </div>
-            <div class="seg-ticks">
-              <div class="seg-tick"></div><div class="seg-tick"></div><div class="seg-tick"></div>
-              <div class="seg-tick"></div><div class="seg-tick"></div><div class="seg-tick"></div>
-              <div class="seg-tick"></div><div class="seg-tick"></div><div class="seg-tick"></div>
-              <div class="seg-tick"></div><div class="seg-tick"></div>
-            </div>
-          </div>
-          <div class="prog-labels">
-            <span id="vacLabelUsed">—</span>
-            <span id="vacLabelRem">—</span>
-          </div>
-        </div>
-
       </div><!-- /progress -->
 
     </div><!-- /results-inner -->
@@ -583,7 +530,7 @@ body::after{
   <div class="div-thin"></div>
   <div class="div-thick"></div>
 </div>
-<div class="footer-note">Work days = 7 minus your days-off input &nbsp;·&nbsp; Egypt Public Holidays excluded &nbsp;·&nbsp; Live tick every second &nbsp;·&nbsp; Cairo UTC+2</div>
+<div class="footer-note">Weekend: Fri & Sat &nbsp;·&nbsp; Egypt Public Holidays built-in &nbsp;·&nbsp; Live tick every second &nbsp;·&nbsp; Cairo UTC+2</div>
 
 <script>
 /* ── DATA ── */
@@ -604,46 +551,12 @@ function toggleTheme(){
 /* ── HELPERS ── */
 function toKey(d){return d.toISOString().split('T')[0]}
 function mmdd(d){return toKey(d).slice(5)}
+function isWork(d){const dow=d.getDay();if(dow===5||dow===6)return false;return!EG_HOLIDAYS.has(toKey(d))}
+function countWork(s,e){let n=0,c=new Date(s);c.setHours(0,0,0,0);const end=new Date(e);end.setHours(0,0,0,0);while(c<end){if(isWork(c))n++;c.setDate(c.getDate()+1)}return n}
+function getHols(s,e){const list=[],c=new Date(s);c.setHours(0,0,0,0);const end=new Date(e);end.setHours(0,0,0,0);while(c<end){const k=toKey(c),dow=c.getDay();if(EG_HOLIDAYS.has(k)&&dow!==5&&dow!==6)list.push(new Date(c));c.setDate(c.getDate()+1)}return list}
 function pad(n,l=2){return String(n).padStart(l,'0')}
 function fmt(n){return Math.abs(Math.round(n)).toLocaleString()}
 function parseDate(s){const p=s.trim().split(/[\/\-\.]/);if(p.length!==3)return null;const[d,m,y]=p.map(Number);if(!d||!m||!y||y<1900||y>2100)return null;const dt=new Date(y,m-1,d);return(dt.getFullYear()===y&&dt.getMonth()===m-1&&dt.getDate()===d)?dt:null}
-
-/*
- * getOffDaySet(daysOff)
- * ----------------------
- * Returns a Set of day-of-week numbers (0=Sun … 6=Sat) that are OFF.
- * Days are removed starting from the end of the Egyptian work week:
- *   Sat(6) first, then Fri(5), Thu(4), Wed(3), Tue(2), Mon(1), Sun(0).
- * So with daysOff=2  → off={5,6}  = Fri+Sat  (matches original exactly)
- *    with daysOff=1  → off={6}    = Sat only
- *    with daysOff=3  → off={4,5,6}= Thu+Fri+Sat
- */
-function getOffDaySet(daysOff){
-  const order=[6,5,4,3,2,1,0];
-  return new Set(order.slice(0,Math.round(Math.max(0,Math.min(7,daysOff)))));
-}
-
-function countWorkDays(s,e,daysOff){
-  const offDays=getOffDaySet(daysOff);
-  let n=0,c=new Date(s);c.setHours(0,0,0,0);
-  const end=new Date(e);end.setHours(0,0,0,0);
-  while(c<end){
-    if(!offDays.has(c.getDay()) && !EG_HOLIDAYS.has(toKey(c))) n++;
-    c.setDate(c.getDate()+1);
-  }
-  return n;
-}
-
-function getHols(s,e,daysOff){
-  const offDays=getOffDaySet(daysOff);
-  const list=[],c=new Date(s);c.setHours(0,0,0,0);
-  const end=new Date(e);end.setHours(0,0,0,0);
-  while(c<end){
-    if(!offDays.has(c.getDay()) && EG_HOLIDAYS.has(toKey(c))) list.push(new Date(c));
-    c.setDate(c.getDate()+1);
-  }
-  return list;
-}
 
 /* ── MASTHEAD DATE ── */
 function updateMasthead(){
@@ -665,22 +578,21 @@ function setFlip(id,val){
 }
 
 /* ── STATE ── */
-let startDate,endDate,vacPerWeek,ticker;
+let startDate,endDate,ticker;
 
 /* ── CALCULATE ── */
 function calculate(){
   const s=parseDate(document.getElementById('startInp').value);
   const e=parseDate(document.getElementById('endInp').value);
-  const vRaw=parseFloat(document.getElementById('vacInp').value)||0;
   const err=document.getElementById('errMsg');
   if(!s||!e){err.textContent='✕  Invalid date — use DD/MM/YYYY';err.style.display='block';return}
   if(e<=s){err.textContent='✕  End date must be after start date';err.style.display='block';return}
-  if(vRaw<0||vRaw>7){err.textContent='✕  Days off per week must be between 0 and 7';err.style.display='block';return}
   err.style.display='none';
-  startDate=s;endDate=e;vacPerWeek=vRaw;
+  startDate=s;endDate=e;
   const res=document.getElementById('results');
   const inner=res.querySelector('.results-inner');
   res.style.display='block';
+  /* re-trigger stagger */
   inner.querySelectorAll(':scope > *').forEach(el=>{
     el.style.animation='none';void el.offsetWidth;el.style.animation='';
   });
@@ -721,7 +633,7 @@ function update(){
     fb.style.display='block';
   }
 
-  setFlip('tDays',pad(d,4));
+  setFlip('tDays',pad(d));
   setFlip('tHours',pad(h));
   setFlip('tMins',pad(m));
   setFlip('tSecs',pad(s));
@@ -735,37 +647,19 @@ function update(){
   const today=new Date(now);today.setHours(0,0,0,0);
   const endD=new Date(endDate);endD.setHours(0,0,0,0);
   const startD=new Date(startDate);startD.setHours(0,0,0,0);
-
-  // Core counts — vacation days per week ARE the days off per week
-  const wRem=countWorkDays(today,endD,vacPerWeek);
-  const wEl=countWorkDays(startD,today,vacPerWeek);
-  const wTot=countWorkDays(startD,endD,vacPerWeek);
+  const wRem=countWork(today,endD);
+  const wEl=countWork(startD,today);
+  const wTot=countWork(startD,endD);
   const wPct=wTot>0?(wEl/wTot*100):0;
-  const wpw=Math.max(0,7-vacPerWeek); // work days per week label
 
   document.getElementById('badgeDays').textContent=fmt(wRem);
-
   const wRemEl=document.getElementById('wRemaining');
   wRemEl.textContent=fmt(wRem)+' days';
   wRemEl.className='wv'+(wRem>30?' good':wRem>10?' warn':' bad');
   document.getElementById('wElapsed').textContent=fmt(wEl)+' days';
   document.getElementById('wTotal').textContent=fmt(wTot)+' days';
 
-  // Hide old vacation sub-rows (now irrelevant — work count IS already correct)
-  document.getElementById('vacRow').style.display='none';
-  document.getElementById('netRow').style.display='none';
-
-  // Stat cards — show schedule summary instead
-  document.getElementById('vacCard').style.display='';
-  document.getElementById('netCard').style.display='none';
-  document.getElementById('sVacRem').textContent=wpw.toFixed(1).replace(/\.0$/,'');
-  document.getElementById('sVacSub').textContent=`work days/week · ${vacPerWeek} day${vacPerWeek!==1?'s':''} off`;
-
-  // Update col-note with actual schedule
-  const noteEl=document.querySelector('.col-note');
-  if(noteEl) noteEl.textContent=`${wpw} days/week · Excluding 🇪🇬 Public Holidays`;
-
-  const hols=getHols(startD,endD,vacPerWeek);
+  const hols=getHols(startD,endD);
   document.getElementById('holList').innerHTML=hols.map(hh=>{
     const name=HOL_NAMES[mmdd(hh)]||'Holiday';
     return `<div class="hol-pill">${hh.getDate()} ${MONTHS[hh.getMonth()]} · ${name}</div>`;
@@ -783,9 +677,6 @@ function update(){
   document.getElementById('wkHead').style.left=Math.min(98,wPct)+'%';
   document.getElementById('wLabelElapsed').textContent=`${fmt(wEl)} days elapsed`;
   document.getElementById('wLabelRemain').textContent=`${fmt(wRem)} days left`;
-
-  // Hide vacation progress bar (no longer needed)
-  document.getElementById('netProgBlock').style.display='none';
 }
 
 document.addEventListener('keydown',e=>{if(e.key==='Enter')calculate()});
